@@ -1,0 +1,59 @@
+Hi Charlie / Mark,
+
+
+Charlie thank you for you email.
+
+It was really unexpected given the long time since my
+application. Nevertheless I was very happy to hear songkick was
+interested in my persona.
+
+I hope you dont mind if I give you a little bit of feedback on your
+email.
+
+Despite I really like direct and straight email, I found it a little
+bit impersonal being contacted like that. It feelt like:" Here.. go
+do this exercise and come back when you are done".  Sometimes I chat
+describing the process is nicer than being catapulted into it.
+
+
+
+Mark,
+
+I'm writing you because you run the entire technology organization.
+
+I would like to pass you some feedback as well about the interview
+initial exercise.  I'm going to be blunt, I hope you will excuse me, I
+promise I will be more constructive later on the email.
+
+It makes no sense and doesnt give you any idea of what is the
+knowledge / experience of a candidate.
+
+- The exercise doesn't tell me if you want me to use a specific
+already built software or you want me to write one.
+
+- The exercise doesnt tell me what operating system you want my
+solution to work on. We can easily presume is linux but what flavor of
+it. RPM based / DEB based. Who knows.
+
+- The exercise doesn't ask me to provide any documentation, nor
+rationale, it says configuration, but at this point its not clear what
+configuration.
+
+- I dont understand how the 'possible solutions' can help you
+determine my competences / knowledge. Either Im good in understand how
+to use a prebuilt puppet/chef module or I'm providing a hand made
+build OVA that doesnt give you any insight.
+
+Nevertheless I attached a solution, I decided to go with write my own
+proxy server. It's written in Go. I heard you write Go at songkick so
+I thought why not.
+
+
+I hate to give bad feedback about the current process, but I would
+rather be straight forward than to leave things with a bad feeling.
+Having gone through a lot of similar processes, this one just seemed
+not quite thought out.
+
+Hope you will understand,
+Thank you in advance,
+Riccardo
