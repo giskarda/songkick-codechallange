@@ -3,6 +3,9 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"crypto/sha1"
+	"encoding/base64"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -21,35 +24,58 @@ type transport struct {
 	http.RoundTripper
 }
 
+func hash(a string, b string) string {
+	h := sha1.New()
+	io.WriteString(h, a)
+	io.WriteString(h, b)
+	sha := base64.URLEncoding.EncodeToString(h.Sum(nil))
+	return sha
+}
+
 func (t *transport) RoundTrip(req *http.Request) (resp *http.Response, err error) {
-	request := req.URL.RawPath
-	c_resp, found := c.Get(request)
-	if found {
-		log.Println("Found request in cache, avoid Roundtrip")
-		r := bufio.NewReader(bytes.NewReader(c_resp.([]byte)))
-		resp, err := http.ReadResponse(r, nil)
-		if err != nil {
-			log.Println(err)
-			return nil, err
-		}
-		return resp, nil
+	request := req.URL.Path
+	if request == "" {
+		log.Fatal("something went wrong parsing the request")
 	}
 
+	if strings.HasPrefix(request, "/api/3.0/artists/") || strings.HasPrefix(request, "/api/3.0/venues/") {
+		query := req.URL.RawQuery
+		key := hash(request, query)
+
+		c_resp, found := c.Get(key)
+		if found {
+			log.Println("Found request in cache, avoid Roundtrip")
+			r := bufio.NewReader(bytes.NewReader(c_resp.([]byte)))
+			resp, err := http.ReadResponse(r, nil)
+			if err != nil {
+				log.Println(err)
+				return nil, err
+			}
+			return resp, nil
+		} else {
+			resp, err = t.RoundTripper.RoundTrip(req)
+			if err != nil {
+				log.Println(err)
+				return nil, err
+			}
+
+			dump, err := httputil.DumpResponse(resp, true)
+			if err != nil {
+				log.Println("cacca")
+				log.Fatal(err)
+				return nil, err
+			}
+			c.Set(key, dump, cache.DefaultExpiration)
+			log.Println("Add request to cache, next time it will be faster")
+
+			return resp, nil
+		}
+	}
 	resp, err = t.RoundTripper.RoundTrip(req)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-
-	dump, err := httputil.DumpResponse(resp, true)
-	if err != nil {
-		log.Println("cacca")
-		log.Fatal(err)
-		return nil, err
-	}
-	c.Set(request, dump, cache.DefaultExpiration)
-	log.Println("Add request to cache, next time it will be faster")
-
 	return resp, nil
 }
 
